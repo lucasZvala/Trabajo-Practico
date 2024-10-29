@@ -4,6 +4,7 @@ class Juego {
       this.player = []
       this.app = new PIXI.Application();
       this.contadorDeFrames = 0;
+      this.teclasPresionadas = {}
 
       this.alto = 720
       this.ancho = 1280
@@ -26,26 +27,66 @@ class Juego {
          this.ponerObstaculos(2)
       })
 
-      this.listeners()
+      this.pulsandoTeclas()
 
    }
-   gameLoop(time) {
-      this.time = time
 
-      this.contadorDeFrames++
+  gameLoop() {
+    this.contadorDeFrames++;
 
-
-      for (let i = 0; i < this.player.length; i++) {
-         this.player[i].update(time)
+    // Verificar el estado de las teclas para movimiento continuo
+    if (this.teclasPresionadas["w"] && this.teclasPresionadas["a"]) {
+      this.player[0].irArriba();
+      this.player[0].irIzquierda();
+      this.player[0].sprite.play();
+      this.player[0].sprite.scale.x = -1;  // Voltear a la izquierda
+    } else if (this.teclasPresionadas["w"] && this.teclasPresionadas["d"]) {
+      this.player[0].irArriba();
+      this.player[0].irDerecha();
+      this.player[0].sprite.play();
+      this.player[0].sprite.scale.x = 1;  // Voltear a la derecha
+    } else if (this.teclasPresionadas["s"] && this.teclasPresionadas["a"]) {
+      this.player[0].irAbajo();
+      this.player[0].irIzquierda();
+      this.player[0].sprite.play();
+      this.player[0].sprite.scale.x = -1;  // Voltear a la izquierda
+    } else if (this.teclasPresionadas["s"] && this.teclasPresionadas["d"]) {
+      this.player[0].irAbajo();
+      this.player[0].irDerecha();
+      this.player[0].sprite.play();
+      this.player[0].sprite.scale.x = 1;  // Voltear a la derecha
+    } else {
+      // Movimientos individuales
+      if (this.teclasPresionadas["w"]) {
+        this.player[0].irArriba();
+        this.player[0].sprite.play();
       }
+      if (this.teclasPresionadas["s"]) {
+        this.player[0].irAbajo();
+        this.player[0].sprite.play();
+      }
+      if (this.teclasPresionadas["a"]) {
+        this.player[0].irIzquierda();
+        this.player[0].sprite.play();
+        this.player[0].sprite.scale.x = -1;  // Voltear a la izquierda
+      }
+      if (this.teclasPresionadas["d"]) {
+        this.player[0].irDerecha();
+        this.player[0].sprite.play();
+        this.player[0].sprite.scale.x = 1;  // Voltear a la derecha
+      }
+    }
 
-      for (let i = 0; i < this.obstaculos.length; i++) {
-         this.obstaculos[i].update(time)
-     }
+    // Actualizar el jugador y los obstáculos
+    for (let i = 0; i < this.player.length; i++) {
+      this.player[i].update();
+    }
 
-   }
+    for (let i = 0; i < this.obstaculos.length; i++) {
+      this.obstaculos[i].update();
+    }
+  }
 
-   
 
    ponerCahboncitos(cantidad) {
       for (let i = 0; i < cantidad; i++) {
@@ -53,44 +94,22 @@ class Juego {
       }
    }
 
-ponerObstaculos(cantidad) {
+   ponerObstaculos(cantidad) {
       for (let i = 0; i < cantidad; i++) {
           this.obstaculos.push(new Obstaculo(Math.random() * 500, Math.random() * 500,  this))
       }
    }
-   
-   listeners() {
-      window.onkeydown = (e) => {
-         
-         // console.log(e)
-         if (e.key == "w") {
-            this.player[0].irArriba()
-           this.player[0].sprite.play()
-         } else if (e.key == "s") {
-            this.player[0].irAbajo()
-            this.player[0].sprite.play()
-         } else if (e.key == "a") {
-            this.player[0].irIzquierda()
-            this.player[0].sprite.play()
-            if (this.player[0].velocidadX < 0) {
-               this.player[0].sprite.scale.x = -1
-            }
-         } else if (e.key == "d") {
-            this.player[0].irDerecha()
-            this.player[0].sprite.play()
-            if (this.player[0].velocidadX > 0) {
-               this.player[0].sprite.scale.x = 1
-            }
-         } else if(e.key == " "){
-            console.log("interactuar")
-         }
-      }
 
-      // window.onkeyup = (e) => {
-      //    this.player[0].quieto()
-      //    this.player[0].sprite.stop()
-      // }
-   }
+   pulsandoTeclas() {
+      // Evento al presionar una tecla
+      window.addEventListener('keydown', (e) => {
+         this.teclasPresionadas[e.key.toLowerCase()] = true;  // Marca la tecla como presionada
+      });
+  
+      // Evento al soltar una tecla
+      window.addEventListener('keyup', (e) => {
+         this.teclasPresionadas[e.key.toLowerCase()] = false;  // Marca la tecla como no presionada
+      });
+    }
 
-
-}
+}  

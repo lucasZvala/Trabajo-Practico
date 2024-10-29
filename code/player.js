@@ -12,12 +12,11 @@ class Player {
         this.aceleracionX = 0
         this.aceleracionY = 0
 
-        this.aceleracionParaCaminar = 3
+        this.aceleracionParaCaminar = 0.5
 
-        this.velMax = 3
+        this.velMax = 2
 
         this.listo = false
-
 
         this.quieto()
 
