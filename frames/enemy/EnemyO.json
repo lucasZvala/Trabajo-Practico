@@ -145,7 +145,7 @@
       }
     }
   },
-  "animacion": {
+  "animations": {
     "corriendo": [
       "enemy1.png",
       "enemy1.png",

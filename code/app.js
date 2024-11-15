@@ -18,7 +18,7 @@ class Juego {
 
     this.ponerListeners()
 
-
+    this.background = null;
 
     promesa.then(e => {
       document.body.appendChild(this.app.canvas)
@@ -29,6 +29,8 @@ class Juego {
         this.gameLoop()
       })
 
+
+      this.cargarFondo();
       this.ponerChaboncitos(1)
       this.ponerObstaculos(3)
     })
@@ -48,20 +50,8 @@ class Juego {
 
 
   
-  background() {
-    const backgroundImageURL = "../frames/background/background.png"; // Cambia esto a la ruta de tu imagen
-
-       PIXI.Assets.load(backgroundImageURL).then((texture) => {
-        // Crear el Sprite de fondo
-        const background = new PIXI.Sprite(texture);
-      
-        // Ajustar el tamaño del fondo para que ocupe toda la pantalla
-        background.width = app.screen.width;
-        background.height = app.screen.height;
-      
-        // Añadir el fondo al escenario
-        app.stage.addChild(background);
-  })
+  cargarFondo() {
+    this.background = new Background(this, 'frames/background/background.png'); // Ruta del SpriteSheet
 }
 
   gameLoop() {
@@ -141,16 +131,8 @@ class Juego {
     }
   }
 
-  agregarEnemyG(x,y){
-      this.entidades.push(new EnemyG(x, y, this));
-  }
-
-  agregarEnemyP(x,y){
-    this.entidades.push(new EnemyP(x, y, this));
-}
-
-  agregarEnemyO(x,y){
-   this.entidades.push(new EnemyO(x, y, this));
+  agregarEnemy(x,y){
+      this.entidades.push(new Enemy(x, y, this));
   }
 
   pulsandoTeclas() {

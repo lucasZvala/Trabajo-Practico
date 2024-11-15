@@ -1,17 +1,17 @@
-class EnemyG extends Entidad {
-    constructor(x, y, juego) {
+class Enemy extends Entidad {
+    constructor(x, y, juego, texture = "../../frames/enemy/EnemyP.json") {
         super(x, y, juego); // Inicializa la clase base Entidad
         this.juego = juego; // Acceso al objeto juego
         this.listo = false; // Indica si el enemigo está listo para usarse
-
+       
         // Cargar el SpriteSheet
-        this.cargarSpriteSheet();
+        this.cargarSpriteSheet(texture);
     }
 
-    async cargarSpriteSheet() {
+    async cargarSpriteSheet(texture) {
         try {
             // Cargar el archivo JSON del SpriteSheet
-            const json = await PIXI.Assets.load('frames/enemy/EnemyG.json');
+            const json = await PIXI.Assets.load(texture);
 
             // Crear el Sprite animado usando la animación definida en el JSON
             this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo']);
@@ -34,7 +34,6 @@ class EnemyG extends Entidad {
             console.error('Error cargando el SpriteSheet:', error);
         }
     }
-    
 
     update() {
         if (!this.listo) return; // Salir si el SpriteSheet no está listo
