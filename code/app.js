@@ -6,6 +6,8 @@ class Juego {
     this.contadorDeFrames = 0
     this.teclasPresionadas = {}
 
+    this.entidades = []
+
     this.alto = 720
     this.ancho = 1280
 
@@ -13,6 +15,10 @@ class Juego {
 
     // Intialize the application.
     let promesa = this.app.init({ width: this.ancho, height: this.alto })
+
+    this.ponerListeners()
+
+
 
     promesa.then(e => {
       document.body.appendChild(this.app.canvas)
@@ -32,6 +38,15 @@ class Juego {
     this.configurarListenerHitbox()
 
   }
+
+
+  ponerListeners(){
+    window.onmousemove = (e) => {
+      this.mouse = {x:e.x, y:e.y};
+    }
+  }
+
+
   
   background() {
     const backgroundImageURL = "../frames/background/background.png"; // Cambia esto a la ruta de tu imagen
@@ -51,6 +66,15 @@ class Juego {
 
   gameLoop() {
      this.contadorDeFrames++
+
+
+    for(let entidad of this.entidades){
+      entidad.update()
+      entidad.render()
+    }
+    
+
+
     // Verificar el estado de las teclas para movimiento continuo
     if (this.teclasPresionadas["w"] && this.teclasPresionadas["a"]) {
       this.player[0].irArriba()
@@ -115,6 +139,18 @@ class Juego {
     for (let i = 0; i < cantidad; i++) {
       this.obstaculos.push(new Obstaculo(Math.random() * 500, Math.random() * 500, this))
     }
+  }
+
+  agregarEnemyG(x,y){
+      this.entidades.push(new EnemyG(x, y, this));
+  }
+
+  agregarEnemyP(x,y){
+    this.entidades.push(new EnemyP(x, y, this));
+}
+
+  agregarEnemyO(x,y){
+   this.entidades.push(new EnemyO(x, y, this));
   }
 
   pulsandoTeclas() {

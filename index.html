@@ -5,17 +5,21 @@
     <script src="code/utils.js"></script>
     <script src="code/app.js"></script>
     <script src="code/player.js"></script>
-    <script src="code/obstaculos.js"></script>
-    <!-- <script src="code/enemy.js"></script> -->
+    <script src="code/obstaculos.js"></script> 
     <script src="code/entity.js"></script>
-
-
-
+    <script src="code/enemyG.js"></script>
+    <script src="code/enemyP.js"></script>
+    <script src="code/enemyO.js"></script>
+   
 </head>
 
 <body>
     <script>
         let juego = new Juego()
+
+        juego.agregarEnemyG(Math.random() * window.innerWidth, Math.random()* innerHeight)
+        juego.agregarEnemyO(Math.random() * window.innerWidth, Math.random()* innerHeight)
+        juego.agregarEnemyP(Math.random() * window.innerWidth, Math.random()* innerHeight)
 
     </script>
 

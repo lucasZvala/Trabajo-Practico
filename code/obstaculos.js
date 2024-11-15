@@ -8,40 +8,40 @@ class Obstaculo {
         this.ancho = 50 + Math.random() * 50
 
         // Crear el cuadrado visible (el obstáculo)
-        this.cargarSpriteSheet()
+        this.ponerCuadrado()
 
         // Crear la hitbox para colisiones
         this.crearHitbox()
     }
 
-    // ponerCuadrado() {
-    //     // Crea el obstáculo visible (cuadrado)
-    //     this.sprite = new PIXI.Graphics()
-    //         .beginFill(getRandomColor())  // Color aleatorio para el obstáculo
-    //         .drawRect(0, 0, this.ancho, this.alto)
-    //         .endFill()
+    ponerCuadrado() {
+        // Crea el obstáculo visible (cuadrado)
+        this.sprite = new PIXI.Graphics()
+            .beginFill(getRandomColor())  // Color aleatorio para el obstáculo
+            .drawRect(0, 0, this.ancho, this.alto)
+            .endFill()
 
-    //     // Establecer la posición del obstáculo
-    //     this.sprite.x = this.x
-    //     this.sprite.y = this.y
+        // Establecer la posición del obstáculo
+        this.sprite.x = this.x
+        this.sprite.y = this.y
 
-    //     // Añadir el obstáculo al stage
-    //     this.juego.app.stage.addChild(this.sprite)
-    // }
+        // Añadir el obstáculo al stage
+        this.juego.app.stage.addChild(this.sprite)
+    }
 
     
-    async cargarSpriteSheet() {
-        let json = await PIXI.Assets.load('../frames/enemy/EnemyG.json')
-        this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo']);
-        this.sprite.animationSpeed = 0.2
-        this.sprite.loop = true
-        this.sprite.play()
-        this.app.stage.addChild(this.sprite)
-        this.sprite.anchor.set(0.5, 1)
-        this.listo = true
+    // async cargarSpriteSheet() {
+    //     let json = await PIXI.Assets.load('../frames/enemy/EnemyG.json')
+    //     this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo']);
+    //     this.sprite.animationSpeed = 0.2
+    //     this.sprite.loop = true
+    //     this.sprite.play()
+    //     this.app.stage.addChild(this.sprite)
+    //     this.sprite.anchor.set(0.5, 1)
+    //     this.listo = true
 
 
-    }
+    // }
 
     crearHitbox() {
         // Crear la hitbox con un color de fondo temporal para asegurarte de que se ve
