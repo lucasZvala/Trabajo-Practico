@@ -1,16 +1,15 @@
 class Juego {
   constructor() {
     this.obstaculos = []
-    this.player = []
+    this.player = null;
     this.app = new PIXI.Application()
+    this.cristales = []
     this.contadorDeFrames = 0
     this.teclasPresionadas = {}
-
     this.entidades = []
-
     this.alto = 720
     this.ancho = 1280
-
+    this.juegoActivo = false;
 
 
     // Intialize the application.
@@ -25,14 +24,13 @@ class Juego {
 
       globalThis.__PIXI_APP__ = this.app
 
-      this.app.ticker.add(() => {
-        this.gameLoop()
-      })
+      const pantallaInicio = new PantallaDeInicio(this.app, () => {
+        this.iniciarJuego();
+    });
+    pantallaInicio.mostrar();
 
-
-      this.cargarFondo();
-      this.ponerChaboncitos(1)
-      this.ponerObstaculos(3)
+    // Configurar eventos del mouse
+    this.ponerListeners();
     })
 
     this.pulsandoTeclas()
@@ -41,6 +39,40 @@ class Juego {
 
   }
 
+  iniciarJuego() {
+    // Activar el juego después de la pantalla de inicio
+    this.juegoActivo = true;
+
+    // Inicializar el juego
+    this.cargarFondo();
+    this.crearCristales();
+
+    this.inicializarPlayer();
+    this.ponerObstaculos(3);
+
+    
+    this.inicializarSpawner();
+
+    // Configurar el bucle principal
+    this.app.ticker.add(() => this.gameLoop());
+}
+
+
+inicializarPlayer() {
+  // Crear al jugador en el centro de la pantalla
+  this.player = new Player(this.ancho / 2, this.alto / 2, this.app, 0, this);
+}
+
+inicializarSpawner() {
+  // Crear un spawner para enemigos
+  const spawner = new Spawner(this, 5000, { x: 1280, y: 720 }, 1, () => {
+      const enemy = new Enemy(200, 200, this);
+      enemy.setPuntos({ x: 200, y: 200 }, { x: 600, y: 300 });
+      this.entidades.push(enemy);
+  });
+
+  spawner.iniciar();
+}
 
   ponerListeners(){
     window.onmousemove = (e) => {
@@ -54,10 +86,27 @@ class Juego {
     this.background = new Background(this, 'frames/background/background.png'); // Ruta del SpriteSheet
 }
 
+crearCristales() {
+  // Crea algunos cristales en ubicaciones predefinidas
+  const posiciones = [
+      { x: 100, y: 150 },
+      { x: 300, y: 400 },
+      { x: 500, y: 200 },
+  ];
+
+  for (let pos of posiciones) {
+      const cristal = new Cristal(pos.x, pos.y, this.app);
+      this.cristales.push(cristal); // Añade el cristal a la lista
+  }
+}
+
+
   gameLoop() {
      this.contadorDeFrames++
 
-
+     if (this.player) {
+      this.player.update();
+  }
     for(let entidad of this.entidades){
       entidad.update()
       entidad.render()
@@ -67,44 +116,44 @@ class Juego {
 
     // Verificar el estado de las teclas para movimiento continuo
     if (this.teclasPresionadas["w"] && this.teclasPresionadas["a"]) {
-      this.player[0].irArriba()
-      this.player[0].irIzquierda()
-      this.player[0].sprite.play()
-      this.player[0].sprite.scale.x = -1  // Voltear a la izquierda
+      this.player.irArriba()
+      this.player.irIzquierda()
+      this.player.sprite.play()
+      this.player.sprite.scale.x = -1  // Voltear a la izquierda
     } else if (this.teclasPresionadas["w"] && this.teclasPresionadas["d"]) {
-      this.player[0].irArriba()
-      this.player[0].irDerecha()
-      this.player[0].sprite.play()
-      this.player[0].sprite.scale.x = 1  // Voltear a la derecha
+      this.player.irArriba()
+      this.player.irDerecha()
+      this.player.sprite.play()
+      this.player.sprite.scale.x = 1  // Voltear a la derecha
     } else if (this.teclasPresionadas["s"] && this.teclasPresionadas["a"]) {
-      this.player[0].irAbajo()
-      this.player[0].irIzquierda()
-      this.player[0].sprite.play()
-      this.player[0].sprite.scale.x = -1  // Voltear a la izquierda
+      this.player.irAbajo()
+      this.player.irIzquierda()
+      this.player.sprite.play()
+      this.player.sprite.scale.x = -1  // Voltear a la izquierda
     } else if (this.teclasPresionadas["s"] && this.teclasPresionadas["d"]) {
-      this.player[0].irAbajo()
-      this.player[0].irDerecha()
-      this.player[0].sprite.play()
-      this.player[0].sprite.scale.x = 1  // Voltear a la derecha
+      this.player.irAbajo()
+      this.player.irDerecha()
+      this.player.sprite.play()
+      this.player.sprite.scale.x = 1  // Voltear a la derecha
     } else {
       // Movimientos individuales
       if (this.teclasPresionadas["w"]) {
-        this.player[0].irArriba()
-        this.player[0].sprite.play()
+        this.player.irArriba()
+        this.player.sprite.play()
       }
       if (this.teclasPresionadas["s"]) {
-        this.player[0].irAbajo()
-        this.player[0].sprite.play()
+        this.player.irAbajo()
+        this.player.sprite.play()
       }
       if (this.teclasPresionadas["a"]) {
-        this.player[0].irIzquierda()
-        this.player[0].sprite.play()
-        this.player[0].sprite.scale.x = -1  // Voltear a la izquierda
+        this.player.irIzquierda()
+        this.player.sprite.play()
+        this.player.sprite.scale.x = -1  // Voltear a la izquierda
       }
       if (this.teclasPresionadas["d"]) {
-        this.player[0].irDerecha()
-        this.player[0].sprite.play()
-        this.player[0].sprite.scale.x = 1  // Voltear a la derecha
+        this.player.irDerecha()
+        this.player.sprite.play()
+        this.player.sprite.scale.x = 1  // Voltear a la derecha
       }
     }
 

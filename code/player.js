@@ -137,8 +137,8 @@ class Player {
         this.x += this.velocidadX
         this.y += this.velocidadY
 
-        this.velocidadX *= 0.9
-        this.velocidadY *= 0.9
+        this.velocidadX *= 0.7
+        this.velocidadY *= 0.7
 
         this.detectarColisionesConObstaculos()
         this.limitarAVelocidaMaxima()
