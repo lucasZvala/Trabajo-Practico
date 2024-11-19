@@ -116,25 +116,29 @@ crearCristales() {
 
     // Verificar el estado de las teclas para movimiento continuo
     if (this.teclasPresionadas["w"] && this.teclasPresionadas["a"]) {
-      this.player.irArriba()
+      this.player.irArriba() 
+      this.player.sprite.scale.x = -0,5  // Voltear a la izquierda
       this.player.irIzquierda()
       this.player.sprite.play()
-      this.player.sprite.scale.x = -1  // Voltear a la izquierda
+     
     } else if (this.teclasPresionadas["w"] && this.teclasPresionadas["d"]) {
       this.player.irArriba()
+      this.player.sprite.scale.x = 0,5  // Voltear a la derecha
       this.player.irDerecha()
       this.player.sprite.play()
-      this.player.sprite.scale.x = 1  // Voltear a la derecha
+      
     } else if (this.teclasPresionadas["s"] && this.teclasPresionadas["a"]) {
       this.player.irAbajo()
+      this.player.sprite.scale.x = -0,5  // Voltear a la izquierda
       this.player.irIzquierda()
       this.player.sprite.play()
-      this.player.sprite.scale.x = -1  // Voltear a la izquierda
+      
     } else if (this.teclasPresionadas["s"] && this.teclasPresionadas["d"]) {
       this.player.irAbajo()
+      this.player.sprite.scale.x = 0,5  // Voltear a la derecha
       this.player.irDerecha()
       this.player.sprite.play()
-      this.player.sprite.scale.x = 1  // Voltear a la derecha
+      
     } else {
       // Movimientos individuales
       if (this.teclasPresionadas["w"]) {
@@ -147,13 +151,15 @@ crearCristales() {
       }
       if (this.teclasPresionadas["a"]) {
         this.player.irIzquierda()
+        this.player.sprite.scale.x = -0,5  // Voltear a la izquierda
         this.player.sprite.play()
-        this.player.sprite.scale.x = -1  // Voltear a la izquierda
+        
       }
       if (this.teclasPresionadas["d"]) {
         this.player.irDerecha()
+        this.player.sprite.scale.x = 0,5  // Voltear a la derecha
         this.player.sprite.play()
-        this.player.sprite.scale.x = 1  // Voltear a la derecha
+       
       }
     }
 

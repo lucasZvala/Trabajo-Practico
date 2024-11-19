@@ -30,6 +30,7 @@ class Player {
     async cargarSpriteSheet() {
         let json = await PIXI.Assets.load('frames/Player.json')
         this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo'])
+        this.sprite.scale = 0.5
         this.sprite.animationSpeed = 0.2
         this.sprite.loop = true
         this.sprite.play()

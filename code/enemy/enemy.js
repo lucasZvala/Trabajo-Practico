@@ -22,13 +22,15 @@ class Enemy extends Entidad {
             // Cargar el archivo JSON del SpriteSheet
             const json = await PIXI.Assets.load(texture);
 
-            // Crear el Sprite animado usando la animación definida en el JSON
+            
             this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo']);
 
+           
+
             // Configurar propiedades del Sprite
-            this.sprite.animationSpeed = 0.2; // Velocidad de la animación
-            this.sprite.loop = true;          // Hacer que la animación se repita
-            this.sprite.play();               // Iniciar la animación
+            this.sprite.animationSpeed = 0.2; 
+            this.sprite.loop = true;         
+            this.sprite.play();              
 
             // Posicionar el Sprite
             this.sprite.x = this.x;
