@@ -161,9 +161,9 @@ class Player {
 
     manejarDireccionDelSprite() {
         if (this.velocidadX > 0) {
-            this.sprite.scale.x = -1
+            this.sprite.scale.x = -0.5
         } else if (this.velocidadX < 0) {
-            this.sprite.scale.x = 1
+            this.sprite.scale.x = 0.5
         }
     }
 
