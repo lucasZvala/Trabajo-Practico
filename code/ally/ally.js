@@ -25,6 +25,8 @@ class Ally extends Entidad {
             
             this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo']);
 
+             this.sprite.name = "aliado"
+
            
 
             // Configurar propiedades del Sprite

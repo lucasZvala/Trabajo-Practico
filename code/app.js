@@ -68,7 +68,7 @@ inicializarSpawnerEnemigo() {
   // Crear un spawner para enemigos
   const spawnerEnemy = new Spawner(this, 2000, { x: 1280, y: 720 }, 1, () => {
       const enemy = new Enemy(200, 200, this);
-      enemy.setPuntos({ x: 200, y: 200 }, { x: 600, y: 300 });
+      enemy.setObjetivo({ x: 600, y: 300 });
       this.entidades.push(enemy);
   });
 
@@ -107,7 +107,7 @@ crearCristales() {
   ];
 
   for (let pos of posiciones) {
-      const cristal = new Cristal(pos.x, pos.y, this.app);
+      const cristal = new Cristal(pos.x, pos.y, this);
       this.cristales.push(cristal); // Añade el cristal a la lista
   }
 }

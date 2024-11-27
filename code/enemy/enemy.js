@@ -9,6 +9,8 @@ class Enemy extends Entidad {
         this.velocidadX = 0
         this.velocidadY = 0
 
+        this.velMax = 10
+
         this.aceleracionX = 0
         this.aceleracionY = 0
 
@@ -21,11 +23,11 @@ class Enemy extends Entidad {
         try {
             // Cargar el archivo JSON del SpriteSheet
             const json = await PIXI.Assets.load(texture);
-
+            
             
             this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo']);
 
-           
+           this.sprite.name = "enemigo"
 
             // Configurar propiedades del Sprite
             this.sprite.animationSpeed = 0.2; 
@@ -52,6 +54,7 @@ class Enemy extends Entidad {
     }
 
     moverHaciaObjetivo() {
+       
         if (!this.listo || !this.puntoB) return;
 
         // Determinar el objetivo actual
@@ -70,8 +73,8 @@ class Enemy extends Entidad {
 
         if (distancia > 1) {
             // Normalizar el vector dirección y multiplicar por la velocidad
-            const dirX = (dx / distancia) * this.velocidad;
-            const dirY = (dy / distancia) * this.velocidad;
+            const dirX = (dx / distancia) * this.velMax;
+            const dirY = (dy / distancia) * this.velMax;
 
             // Actualizar la posición del enemigo
             this.x += dirX;

@@ -17,12 +17,14 @@ class Cristal {
 
             this.sprite = new PIXI.AnimatedSprite(json.animations['cristal']);
 
+             this.sprite.name = "cristal"
+
             this.sprite.animationSpeed = 0.2; 
             this.sprite.loop = true;         
             this.sprite.play();
 
            this.setPosition()
-
+           
             // Agregar el Sprite al stage
             this.juego.app.stage.addChild(this.sprite);
 
