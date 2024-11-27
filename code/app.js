@@ -51,7 +51,8 @@ class Juego {
     this.ponerObstaculos(3);
 
     
-    this.inicializarSpawner();
+    this.inicializarSpawnerEnemigo();
+    this.inicializarSpawnerAliado();
 
     // Configurar el bucle principal
     this.app.ticker.add(() => this.gameLoop());
@@ -63,15 +64,26 @@ inicializarPlayer() {
   this.player = new Player(this.ancho / 2, this.alto / 2, this.app, 0, this);
 }
 
-inicializarSpawner() {
+inicializarSpawnerEnemigo() {
   // Crear un spawner para enemigos
-  const spawner = new Spawner(this, 5000, { x: 1280, y: 720 }, 1, () => {
+  const spawnerEnemy = new Spawner(this, 2000, { x: 1280, y: 720 }, 1, () => {
       const enemy = new Enemy(200, 200, this);
       enemy.setPuntos({ x: 200, y: 200 }, { x: 600, y: 300 });
       this.entidades.push(enemy);
   });
 
-  spawner.iniciar();
+  spawnerEnemy.iniciar();
+}
+
+inicializarSpawnerAliado() {
+
+  const spawnerAlly = new Spawner(this, 5000, { x: 1280, y: 720 }, 1, () => {
+      const ally = new Ally(this.ancho / 2, this.alto / 2, this);
+      ally.setPuntos({ x: 200, y: 200 }, { x: 600, y: 300 });
+      this.entidades.push(ally);
+  });
+
+  spawnerAlly.iniciar();
 }
 
   ponerListeners(){

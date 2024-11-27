@@ -15,6 +15,12 @@ class Cristal {
             // Cargar el archivo JSON del SpriteSheet
             const json = await PIXI.Assets.load(texture);
 
+            this.sprite = new PIXI.AnimatedSprite(json.animations['cristal']);
+
+            this.sprite.animationSpeed = 0.2; 
+            this.sprite.loop = true;         
+            this.sprite.play();
+
            this.setPosition()
 
             // Agregar el Sprite al stage
