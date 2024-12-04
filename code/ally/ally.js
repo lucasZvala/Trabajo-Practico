@@ -1,5 +1,5 @@
 class Ally extends Entidad {
-    constructor(x, y, juego, texture = "../../frames/Ally/AllyY.json") {
+    constructor(x, y, juego, texture = "../../frames/Ally/AllyY.json", objetivo = null) {
         super(x, y, juego); 
         this.juego = juego; 
         this.listo = false; 
@@ -8,6 +8,11 @@ class Ally extends Entidad {
 
         this.velocidadX = 0
         this.velocidadY = 0
+
+        this.objetivo = objetivo;
+
+        this.sprite = null;
+
 
         this.aceleracionX = 0
         this.aceleracionY = 0
@@ -48,16 +53,31 @@ class Ally extends Entidad {
         }
     }
 
-    setObjetivo(puntoB) {
+    setObjetivo(objetivo) {
         // Define el objetivo hacia el que se moverá el enemigo
-        this.puntoB = puntoB;
+        // this.buscarEnemigoCercano()
+        this.objetivo = objetivo;
     }
 
+
+    haLlegadoAlObjetivo() {
+        if (!this.objetivo) return false;
+
+        const distanciaX = Math.abs(this.x - this.objetivo.x);
+        const distanciaY = Math.abs(this.y - this.objetivo.y);
+
+        return distanciaX < 5 && distanciaY < 5; // Consideramos una tolerancia de 5 píxeles
+    }
+
+
+
+
     moverHaciaObjetivo() {
-        if (!this.listo || !this.puntoB) return;
+      
+        if (!this.listo || !this.objetivo) return;
 
         // Determinar el objetivo actual
-        const objetivo = this.puntoB;
+        const objetivo = this.objetivo;
 
         // Verificar si el objetivo es un objeto con coordenadas
         const objetivoX = objetivo.x || objetivo.sprite?.x || 0;
@@ -72,8 +92,8 @@ class Ally extends Entidad {
 
         if (distancia > 1) {
             // Normalizar el vector dirección y multiplicar por la velocidad
-            const dirX = (dx / distancia) * this.velocidad;
-            const dirY = (dy / distancia) * this.velocidad;
+            const dirX = (dx / distancia) * this.velocidadMax;
+            const dirY = (dy / distancia) * this.velocidadMax;
 
             // Actualizar la posición del enemigo
             this.x += dirX;
@@ -96,11 +116,24 @@ class Ally extends Entidad {
     }
 
 
+    buscarEnemigoCercano(){
+       return this.juego.entidades[0]
+        
+    }
+
+
     update() {
         if (!this.listo) return; // Salir si el SpriteSheet no está listo
-
-
-        this.moverHaciaObjetivo();
+       
+        if (this.objetivo) {
+            if (this.haLlegadoAlObjetivo()) {
+                console.log('Ally ha llegado al objetivo:', this.objetivo);
+                // Aquí puedes definir lo que sucede al llegar al objetivo
+                this.objetivo = null; // Opcional: limpiar el objetivo al llegar
+            } else {
+                this.moverHaciaObjetivo();
+            }
+        }
 
         
         // Aquí puedes agregar lógica específica, como perseguir al jugador

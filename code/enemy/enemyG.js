@@ -1,7 +1,6 @@
-class EnemyO extends Enemy {
+class EnemyG extends Enemy {
     constructor(x, y, juego, texture = null) {
-        super(x, y, juego); 
-        this.juego = juego; 
+        super(x, y, juego);  
         this.listo = false; 
       
 
@@ -16,7 +15,7 @@ class EnemyO extends Enemy {
 
 
         // Cargar el SpriteSheet
-        this.cargarSpriteSheet(texture);
+        super.cargarSpriteSheet(texture);
     }
 
     async cargarSpriteSheet(texture) {
@@ -103,16 +102,6 @@ class EnemyO extends Enemy {
 
 
     update() {
-        if (!this.listo) return; // Salir si el SpriteSheet no está listo
-
-
-        this.moverHaciaObjetivo();
-
-        
-        // Aquí puedes agregar lógica específica, como perseguir al jugador
-        this.sprite.x = this.x; // Actualizar la posición en cada frame
-        this.sprite.y = this.y;
-
-        super.update(); // Llamar al método update de la clase base
+       super.update()
     }
 }

@@ -12,6 +12,8 @@ class Player {
         this.velocidadX = 0
         this.velocidadY = 0
 
+        
+
         this.aceleracionX = 0
         this.aceleracionY = 0
 
@@ -25,6 +27,8 @@ class Player {
         this.cargarSpriteSheet()
 
         this.crearHitbox()
+
+        this.setupTeclado()
     }
 
     async cargarSpriteSheet() {
@@ -121,6 +125,24 @@ class Player {
                 this.velocidadY = -this.velMax
             }
         }
+    }
+
+
+    setupTeclado() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'k' || event.key === 'K') {
+                this.invocarAlly();
+            }
+        });
+    }
+
+    // Lógica para invocar un Ally
+    invocarAlly() {
+        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyY.json');
+        this.juego.entidades.push(nuevoAlly);
+        nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano())
+        console.log('Ally invocado en la posición del Player:', this.x, this.y);
+        // nuevoAlly.moverHaciaObjetivo()
     }
 
 

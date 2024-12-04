@@ -45,14 +45,14 @@ class Juego {
 
     // Inicializar el juego
     this.cargarFondo();
-    this.crearCristales();
+    this.crearCristal();
 
     this.inicializarPlayer();
     this.ponerObstaculos(3);
 
     
     this.inicializarSpawnerEnemigo();
-    this.inicializarSpawnerAliado();
+    // this.inicializarSpawnerAliado();
 
     // Configurar el bucle principal
     this.app.ticker.add(() => this.gameLoop());
@@ -64,27 +64,64 @@ inicializarPlayer() {
   this.player = new Player(this.ancho / 2, this.alto / 2, this.app, 0, this);
 }
 
-inicializarSpawnerEnemigo() {
+
+inicializarSpawnerEnemigo(){
+  this.inicializarSpawnerEnemigoO()
+  // this.inicializarSpawnerEnemigoG()
+  // this.inicializarSpawnerEnemigoP()
+}
+
+inicializarSpawnerEnemigoO() {
   // Crear un spawner para enemigos
-  const spawnerEnemy = new Spawner(this, 2000, { x: 1280, y: 720 }, 1, () => {
-      const enemy = new Enemy(200, 200, this);
-      enemy.setObjetivo({ x: 600, y: 300 });
+  const spawnerEnemy = new Spawner(this, 2200, { x: 1280, y: 720 }, 1, () => {
+      const enemy = new Enemy(200, 200, this, "../../frames/enemy/EnemyO.json");
+      enemy.setObjetivo({ x: 1200, y: 600 });
+      if(enemy.x && enemy.y == enemy.puntoB){
+        enemy.atacarObjetivo()
+      }
+      
       this.entidades.push(enemy);
-  });
+  }, 5);
 
   spawnerEnemy.iniciar();
 }
 
-inicializarSpawnerAliado() {
+inicializarSpawnerEnemigoP() {
+  // Crear un spawner para enemigos
+  const spawnerEnemy = new Spawner(this, 3000, { x: 1280, y: 720 }, 1, () => {
+      const enemy = new Enemy(200, 200, this, "../../frames/enemy/EnemyP.json");
+      enemy.setObjetivo({ x: 1200, y: 600 });
+      this.entidades.push(enemy);
+  }, 2);
 
-  const spawnerAlly = new Spawner(this, 5000, { x: 1280, y: 720 }, 1, () => {
-      const ally = new Ally(this.ancho / 2, this.alto / 2, this);
-      ally.setPuntos({ x: 200, y: 200 }, { x: 600, y: 300 });
-      this.entidades.push(ally);
-  });
-
-  spawnerAlly.iniciar();
+  spawnerEnemy.iniciar();
 }
+
+
+inicializarSpawnerEnemigoG() {
+  // Crear un spawner para enemigos
+  const spawnerEnemy = new Spawner(this, 4150, { x: 1280, y: 720 }, 1, () => {
+      const enemy = new Enemy(200, 200, this, "../../frames/enemy/EnemyG.json");
+      enemy.setObjetivo({ x: 1200, y: 600 });
+      this.entidades.push(enemy);
+  }, 8);
+
+  spawnerEnemy.iniciar();
+}
+
+
+
+
+// inicializarSpawnerAliado() {
+
+//   const spawnerAlly = new Spawner(this, 4000, { x: 1280, y: 720 }, 1, () => {
+//       const ally = new Ally(this.ancho / 2, this.alto / 2, this);
+//       ally.setObjetivo(enemy);
+//       this.entidades.push(ally);
+//   });
+
+//   spawnerAlly.iniciar();
+// }
 
   ponerListeners(){
     window.onmousemove = (e) => {
@@ -98,18 +135,12 @@ inicializarSpawnerAliado() {
     this.background = new Background(this, 'frames/background/background.png'); // Ruta del SpriteSheet
 }
 
-crearCristales() {
+crearCristal() {
   // Crea algunos cristales en ubicaciones predefinidas
-  const posiciones = [
-      { x: 100, y: 150 },
-      { x: 300, y: 400 },
-      { x: 500, y: 200 },
-  ];
-
-  for (let pos of posiciones) {
-      const cristal = new Cristal(pos.x, pos.y, this);
+ 
+      const cristal = new Cristal(1200, 300, this);
       this.cristales.push(cristal); // Añade el cristal a la lista
-  }
+ 
 }
 
 

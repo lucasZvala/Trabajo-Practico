@@ -1,10 +1,13 @@
 class Spawner {
-    constructor(juego, intervalo, posicion, cantidad, callbackSpawn) {
-        this.juego = juego;           // Referencia al juego
-        this.intervalo = intervalo;   // Tiempo entre spawns (milisegundos)
-        this.posicion = posicion;     // Posición base del spawner {x, y}
-        this.cantidad = cantidad;     // Cantidad de entidades a spawnear cada vez
-        this.callbackSpawn = callbackSpawn; // Función para crear la entidad
+    constructor(juego, intervalo, posicion, cantidad, callbackSpawn, limiteMaximo = Infinity) {
+        this.juego = juego;           
+        this.intervalo = intervalo;   
+        this.posicion = posicion;     
+        this.cantidad = cantidad;     
+        this.callbackSpawn = callbackSpawn; 
+        this.limiteMaximo = limiteMaximo;   
+        this.totalEntidadesCreadas = 0;     
+
         this.timer = null;           // Referencia al temporizador
     }
 
@@ -12,8 +15,19 @@ class Spawner {
         if (this.timer) return; // Si ya está corriendo, no hacer nada
 
         this.timer = setInterval(() => {
+            if (this.totalEntidadesCreadas >= this.limiteMaximo) {
+                this.detener();
+                console.log('Límite de entidades alcanzado. El spawner ha detenido su creación.');
+                return;
+            }
+
             for (let i = 0; i < this.cantidad; i++) {
-                this.callbackSpawn(this.posicion);
+                if (this.totalEntidadesCreadas < this.limiteMaximo) {
+                    this.callbackSpawn(this.posicion);
+                    this.totalEntidadesCreadas++;
+                } else {
+                    break;
+                }
             }
         }, this.intervalo);
     }

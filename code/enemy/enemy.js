@@ -9,10 +9,14 @@ class Enemy extends Entidad {
         this.velocidadX = 0
         this.velocidadY = 0
 
-        this.velMax = 10
+        this.sprite = null;
+
+        this.velMax = 3
 
         this.aceleracionX = 0
         this.aceleracionY = 0
+
+        this.id = 0
 
 
         // Cargar el SpriteSheet
@@ -94,6 +98,10 @@ class Enemy extends Entidad {
             // Si llegó al objetivo, detenerse o ejecutar alguna acción
             console.log("Llegó al objetivo");
         }
+    }
+
+    atacarObjetivo(){
+        console.log("te ataco")
     }
 
 
