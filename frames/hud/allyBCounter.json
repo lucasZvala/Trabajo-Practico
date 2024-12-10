@@ -1,23 +1,23 @@
 {
   "frames": {
-    "cristalR.png": {
+    "allyBCounter.png": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 33,
-        "h": 32
+        "w": 19,
+        "h": 29
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 47,
-        "y": 72,
-        "w": 33,
-        "h": 32
+        "x": 6,
+        "y": 0,
+        "w": 19,
+        "h": 29
       },
       "sourceSize": {
-        "w": 128,
-        "h": 128
+        "w": 32,
+        "h": 32
       },
       "pivot": {
         "x": 0.5,
@@ -26,18 +26,18 @@
     }
   },
   "animations": {
-    "cristal": [
-      "cristalR.png"
+    "contador": [
+      "allyBCounter.png"
     ]
   },
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
-    "image": "cristalR.png",
+    "image": "allyBCounter.png",
     "format": "RGBA8888",
     "size": {
-      "w": 32,
-      "h": 33
+      "w": 19,
+      "h": 29
     },
     "scale": 1
   }

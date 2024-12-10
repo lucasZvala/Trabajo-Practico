@@ -5,12 +5,18 @@ class Player {
         this.app = app
         this.x = x
         this.y = y
+        this.teclasPresionadas = {}
+        this.grid = juego.grid;
 
         this.ancho = 70
         this.alto = 130
 
         this.velocidadX = 0
         this.velocidadY = 0
+
+        this.zIndex = 0; // Inicializar el zIndex
+
+        
 
         
 
@@ -24,11 +30,18 @@ class Player {
 
         this.quieto()
 
+        this.pulsandoTeclas()
+
         this.cargarSpriteSheet()
 
         this.crearHitbox()
 
         this.setupTeclado()
+        
+
+        this.allyYCounter= 0
+        this.allyRCounter= 0
+        this.allyBCounter= 0
     }
 
     async cargarSpriteSheet() {
@@ -41,6 +54,11 @@ class Player {
         this.app.stage.addChild(this.sprite)
         this.sprite.anchor.set(0.5, 1)
         this.listo = true
+        
+    }
+
+    updateZIndex() {
+        this.zIndex = Math.floor(this.y); // Asignar zIndex según la posición Y
     }
 
     crearHitbox() {
@@ -62,40 +80,51 @@ class Player {
         this.hitbox.visible = !this.hitbox.visible
     }
 
-    detectarColisionesConObstaculos() {
-        for (let i = 0; i < this.juego.obstaculos.length; i++) {
-            let obs = this.juego.obstaculos[i]
+    // detectarColisionesConObstaculos() {
+    //     for (let i = 0; i < this.juego.cristales.length; i++) {
+    //         let obs = this.juego.cristales[i]
     
-            // Verificar si hay superposición entre la hitbox del jugador y la del obstáculo
-            if (this.isOverlap(this.hitbox, obs.hitbox)) {
-              //  console.log("Colisión detectada con obstáculo", obs)
+    //         // Verificar si hay superposición entre la hitbox del jugador y la del obstáculo
+    //         if (this.isOverlap(this.hitbox, obs.hitbox)) {
+    //           //  console.log("Colisión detectada con obstáculo", obs)
     
-                // Calcular el centro de ambas hitboxes
-                const centroJugadorX = this.hitbox.x + this.hitbox.width / 2
-                const centroJugadorY = this.hitbox.y + this.hitbox.height / 2
-                const centroObstaculoX = obs.hitbox.x + obs.hitbox.width / 2
-                const centroObstaculoY = obs.hitbox.y + obs.hitbox.height / 2
+    //             // Calcular el centro de ambas hitboxes
+    //             const centroJugadorX = this.hitbox.x + this.hitbox.width / 2
+    //             const centroJugadorY = this.hitbox.y + this.hitbox.height / 2
+    //             const centroObstaculoX = obs.hitbox.x + obs.hitbox.width / 2
+    //             const centroObstaculoY = obs.hitbox.y + obs.hitbox.height / 2
     
-                // Determinar la dirección de la colisión y establecer la velocidad a 0 en esa dirección
-                if (centroJugadorX < centroObstaculoX) {
-                    // Colisión desde la izquierda
-                    this.velocidadX = Math.min(this.velocidadX, 0)
-                } else if (centroJugadorX > centroObstaculoX) {
-                    // Colisión desde la derecha
-                    this.velocidadX = Math.max(this.velocidadX, 0)
-                }
+    //             // Determinar la dirección de la colisión y establecer la velocidad a 0 en esa dirección
+    //             if (centroJugadorX < centroObstaculoX) {
+    //                 // Colisión desde la izquierda
+    //                 this.velocidadX = Math.min(this.velocidadX, 0)
+    //             } else if (centroJugadorX > centroObstaculoX) {
+    //                 // Colisión desde la derecha
+    //                 this.velocidadX = Math.max(this.velocidadX, 0)
+    //             }
     
-                if (centroJugadorY < centroObstaculoY) {
-                    // Colisión desde arriba
-                    this.velocidadY = Math.min(this.velocidadY, 0)
-                } else if (centroJugadorY > centroObstaculoY) {
-                    // Colisión desde abajo
-                    this.velocidadY = Math.max(this.velocidadY, 0)
-                }
-            }
-        }
+    //             if (centroJugadorY < centroObstaculoY) {
+    //                 // Colisión desde arriba
+    //                 this.velocidadY = Math.min(this.velocidadY, 0)
+    //             } else if (centroJugadorY > centroObstaculoY) {
+    //                 // Colisión desde abajo
+    //                 this.velocidadY = Math.max(this.velocidadY, 0)
+    //             }
+    //         }
+    //     }
+    // }
+    
+    counterY(){
+        this.allyYCounter +=1
     }
-    
+
+    counterB(){
+        this.allyBCounter +=1
+    }
+
+    counterR(){
+        this.allyRCounter +=1
+    }
 
     isOverlap(hitbox1, hitbox2) {
         return hitbox1.x < hitbox2.x + hitbox2.width &&
@@ -127,28 +156,125 @@ class Player {
         }
     }
 
+    mover() {
+        if (this.teclasPresionadas["w"]) {
+            this.irArriba()
+          
+            this.sprite.play()
+          }
+          if (this.teclasPresionadas["s"]) {
+            this.irAbajo()
+          
+            this.sprite.play()
+          }
+          if (this.teclasPresionadas["a"]) {
+            this.irIzquierda()
+    
+            this.sprite.play()
+            
+          }
+          if (this.teclasPresionadas["d"]) {
+            this.irDerecha()
+          
+            this.sprite.play()
+           
+          }
+        }
 
     setupTeclado() {
+
+        
         window.addEventListener('keydown', (event) => {
-            if (event.key === 'k' || event.key === 'K') {
-                this.invocarAlly();
+            if (event.key == 'k' || event.key == 'K') {
+                if(this.allyYCounter > 0){
+                this.invocarAllyY();
+                this.allyYCounter -= 1;
+            }else{
+                console.log("no tienes este aliado")
+            }
+            }
+            if (event.key == 'j' || event.key == 'J') {
+                if(this.allyBCounter > 0){
+                this.invocarAllyB();
+                this.allyBCounter -= 1;
+            }else{
+                console.log("no tienes este aliado")
+            }
+            }
+            if (event.key == 'l' || event.key == 'L') {
+                if(this.allyRCounter > 0){
+                this.invocarAllyR();
+                this.allyRCounter -= 1;
+            }else{
+                console.log("no tienes este aliado")
+            }
+            }
+            if (event.key == 'u' || event.key == 'U') {
+               this.counterY()
+                console.log("contador aliado amarillo agregado")
+            
+            }
+            if (event.key == 'i' || event.key == 'I') {
+               this.counterB()
+               console.log("contador aliado Azul agregado")
+           
+            }
+            if (event.key == 'o' || event.key == 'O') {
+                
+                this.counterR();
+                console.log("contador aliado Rojo agregado")
+           
             }
         });
     }
 
     // Lógica para invocar un Ally
-    invocarAlly() {
+    invocarAllyY() {
         const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyY.json');
         this.juego.entidades.push(nuevoAlly);
-        nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano())
+        // nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano("orange"))
+        this.allyYCounter -=1
         console.log('Ally invocado en la posición del Player:', this.x, this.y);
+        this.juego.allyY += 1
         // nuevoAlly.moverHaciaObjetivo()
     }
+
+    invocarAllyR() {
+        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyR.json');
+        this.juego.entidades.push(nuevoAlly);
+        // nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano("orange"))
+        this.allyYCounter -=1
+        console.log('Ally invocado en la posición del Player:', this.x, this.y);
+        this.juego.allyR += 1
+        // nuevoAlly.moverHaciaObjetivo()
+    }
+
+    invocarAllyB() {
+        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyB.json');
+        this.juego.entidades.push(nuevoAlly);
+        // nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano("orange"))
+        this.allyYCounter -=1
+        console.log('Ally invocado en la posición del Player:', this.x, this.y);
+        this.juego.allyB += 1
+        // nuevoAlly.moverHaciaObjetivo()
+    }
+
+    pulsandoTeclas() {
+        // Evento al presionar una tecla
+        window.addEventListener('keydown', (e) => {
+          this.teclasPresionadas[e.key.toLowerCase()] = true  // Marca la tecla como presionada
+        })
+    
+        // Evento al soltar una tecla
+        window.addEventListener('keyup', (e) => {
+          this.teclasPresionadas[e.key.toLowerCase()] = false  // Marca la tecla como no presionada
+        })
+      }
 
 
     update(time) {
         if (!this.listo) return
-
+        this.mover()
         this.time = time
 
         this.velocidadX += this.aceleracionX
@@ -163,7 +289,9 @@ class Player {
         this.velocidadX *= 0.7
         this.velocidadY *= 0.7
 
-        this.detectarColisionesConObstaculos()
+        this.updateZIndex();
+
+        // this.detectarColisionesConObstaculos()
         this.limitarAVelocidaMaxima()
         this.manejarDireccionDelSprite()
 

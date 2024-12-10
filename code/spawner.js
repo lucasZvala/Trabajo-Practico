@@ -1,12 +1,13 @@
 class Spawner {
-    constructor(juego, intervalo, posicion, cantidad, callbackSpawn, limiteMaximo = Infinity) {
+    constructor(juego, intervalo, posicion, cantidad, callbackSpawn, limiteMaximo = Infinity, tipo = "basico") {
         this.juego = juego;           
         this.intervalo = intervalo;   
         this.posicion = posicion;     
         this.cantidad = cantidad;     
         this.callbackSpawn = callbackSpawn; 
         this.limiteMaximo = limiteMaximo;   
-        this.totalEntidadesCreadas = 0;     
+        this.totalEntidadesCreadas = 0; 
+        this.tipo = tipo    
 
         this.timer = null;           // Referencia al temporizador
     }

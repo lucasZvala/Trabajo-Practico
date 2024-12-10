@@ -91,7 +91,7 @@ class PantallaDeInicio {
         this.ayuda1.y = this.app.screen.height / 2 - 20;
 
         this.ayuda2 = new PIXI.Text(
-            'Use WASD to move your character and right-click to summon allies',
+            'Use WASD to move your character and k to summon allies',
             estiloAyuda
         );
         this.ayuda2.anchor.set(0.5);

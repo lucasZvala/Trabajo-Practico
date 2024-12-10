@@ -1,4 +1,4 @@
-class Cristal extends Entidad {
+class Torre extends Entidad {
     constructor(x, y, juego, texture = null) {
         super(x, y, juego); 
         this.juego = juego; 
@@ -6,6 +6,7 @@ class Cristal extends Entidad {
       
         this.sprite = null;
 
+        this.vida = 30
 
         // Cargar el SpriteSheet
         this.cargarSpriteSheet(texture);
@@ -17,14 +18,12 @@ class Cristal extends Entidad {
             const json = await PIXI.Assets.load(texture);
 
             
-            this.sprite = new PIXI.AnimatedSprite(json.animations['cristal']);
+            this.sprite = new PIXI.AnimatedSprite(json.animations['damage']);
            
 
             // Configurar propiedades del Sprite
             this.sprite.animationSpeed = 0.2; 
-            this.sprite.loop = true;         
-            this.sprite.play();              
-
+            this.sprite.loop = false;         
             // Posicionar el Sprite
             this.sprite.x = this.x;
             this.sprite.y = this.y;
@@ -49,11 +48,20 @@ class Cristal extends Entidad {
         }
     }
 
+    dañar() {
+        if (this.sprite) {
+            this.vida -=5
+            this.sprite.play();
+            console.log(this.vida)
+            if (this.vida == 0){
+                this.destruir()
+            }
+        }
+    }
+
     update() {
         if (!this.listo) return; 
 
 
     }
 }
-
-

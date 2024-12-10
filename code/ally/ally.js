@@ -17,6 +17,7 @@ class Ally extends Entidad {
         this.aceleracionX = 0
         this.aceleracionY = 0
 
+        this.vida = 15
 
         // Cargar el SpriteSheet
         this.cargarSpriteSheet(texture);
@@ -116,8 +117,10 @@ class Ally extends Entidad {
     }
 
 
-    buscarEnemigoCercano(){
-       return this.juego.entidades[0]
+    buscarEnemigoCercano(tipo){
+       if (this.entidades.filter(entidad => entidad.tipo == tipo)){
+        this.moverHaciaObjetivo()
+       }
         
     }
 

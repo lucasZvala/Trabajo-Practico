@@ -1,10 +1,13 @@
 class Enemy extends Entidad {
-    constructor(x, y, juego, texture = "../../frames/enemy/EnemyP.json") {
+    constructor(x, y, juego, texture = "../../frames/enemy/EnemyP.json", tipo = "basico") {
         super(x, y, juego); 
         this.juego = juego; 
         this.listo = false; 
       
+        this.tipo = tipo
 
+        this.grid = juego.grid; // Referencia a la grid
+        this.vision = 120 + Math.floor(Math.random() * 150); //en pixels
 
         this.velocidadX = 0
         this.velocidadY = 0
@@ -15,9 +18,8 @@ class Enemy extends Entidad {
 
         this.aceleracionX = 0
         this.aceleracionY = 0
-
-        this.id = 0
-
+        
+        this.vida = 5
 
         // Cargar el SpriteSheet
         this.cargarSpriteSheet(texture);
@@ -52,15 +54,17 @@ class Enemy extends Entidad {
         }
     }
 
+    
     setObjetivo(puntoB) {
+       
         // Define el objetivo hacia el que se moverá el enemigo
         this.puntoB = puntoB;
     }
 
     moverHaciaObjetivo() {
-       
-        if (!this.listo || !this.puntoB) return;
-
+       debugger
+        if (!this.listo || this.puntoB) return;
+        
         // Determinar el objetivo actual
         const objetivo = this.puntoB;
 
@@ -95,9 +99,12 @@ class Enemy extends Entidad {
                 this.sprite.scale.x = -1; // Mirar a la izquierda
             }
         } else {
-            // Si llegó al objetivo, detenerse o ejecutar alguna acción
-            console.log("Llegó al objetivo");
+           this.atacarObjetivo()
         }
+    }
+
+    typeShow(){
+        return this.type
     }
 
     atacarObjetivo(){
@@ -108,6 +115,8 @@ class Enemy extends Entidad {
     update() {
         if (!this.listo) return; // Salir si el SpriteSheet no está listo
 
+
+        this.mirarAlrededor()
 
         this.moverHaciaObjetivo();
 

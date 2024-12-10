@@ -147,24 +147,24 @@
   },
   "animations": {
     "corriendo": [
-      "allyR1.png",
-      "allyR1.png",
-      "allyR2.png",
-      "allyR2.png",
-      "allyR3.png",
-      "allyR3.png",
-      "allyR4.png",
-      "allyR4.png",
-      "allyR5.png",
-      "allyR5.png",
-      "allyR6.png",
-      "allyR6.png"
+      "ally1.png",
+      "ally1.png",
+      "ally2.png",
+      "ally2.png",
+      "ally3.png",
+      "ally3.png",
+      "ally4.png",
+      "ally4.png",
+      "ally5.png",
+      "ally5.png",
+      "ally6.png",
+      "ally6.png"
     ]
   },
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
-    "image": "texture.png",
+    "image": "allyR.png",
     "format": "RGBA8888",
     "size": {
       "w": 484,

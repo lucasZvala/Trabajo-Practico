@@ -12,13 +12,12 @@ class Background {
         try {
             // Cargar la textura desde la ruta proporcionada
             const texture = await PIXI.Assets.load(this.rutaPNG);
-
             // Crear el Sprite con la textura cargada
             this.sprite = new PIXI.Sprite(texture);
 
             // Ajustar el tamaño del fondo para que ocupe toda la pantalla
-            this.sprite.width = this.juego.ancho;
-            this.sprite.height = this.juego.alto;
+            this.sprite.width = this.juego.ancho *2;
+            this.sprite.height = this.juego.alto *2;
 
             // Posicionar el fondo
             this.sprite.x = 0;

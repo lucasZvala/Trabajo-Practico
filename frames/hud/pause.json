@@ -1,23 +1,23 @@
 {
   "frames": {
-    "cristalR.png": {
+    "HUD_pause.png": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 33,
-        "h": 32
+        "w": 68,
+        "h": 74
       },
-      "rotated": true,
-      "trimmed": true,
+      "rotated": false,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 47,
-        "y": 72,
-        "w": 33,
-        "h": 32
+        "x": 0,
+        "y": 0,
+        "w": 68,
+        "h": 74
       },
       "sourceSize": {
-        "w": 128,
-        "h": 128
+        "w": 68,
+        "h": 74
       },
       "pivot": {
         "x": 0.5,
@@ -26,18 +26,18 @@
     }
   },
   "animations": {
-    "cristal": [
-      "cristalR.png"
+    "pause": [
+      "HUD_pause.png"
     ]
   },
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
-    "image": "cristalR.png",
+    "image": "pause.png",
     "format": "RGBA8888",
     "size": {
-      "w": 32,
-      "h": 33
+      "w": 68,
+      "h": 74
     },
     "scale": 1
   }

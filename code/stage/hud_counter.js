@@ -1,10 +1,10 @@
-class Cristal extends Entidad {
+class Counter extends Entidad {
     constructor(x, y, juego, texture = null) {
         super(x, y, juego); 
         this.juego = juego; 
         this.listo = false; 
       
-        this.sprite = null;
+        this.sprite = null
 
 
         // Cargar el SpriteSheet
@@ -13,17 +13,17 @@ class Cristal extends Entidad {
 
     async cargarSpriteSheet(texture) {
         try {
+            
             // Cargar el archivo JSON del SpriteSheet
             const json = await PIXI.Assets.load(texture);
 
-            
-            this.sprite = new PIXI.AnimatedSprite(json.animations['cristal']);
+            this.sprite = new PIXI.AnimatedSprite(json.animations['pause']);
            
 
             // Configurar propiedades del Sprite
             this.sprite.animationSpeed = 0.2; 
             this.sprite.loop = true;         
-            this.sprite.play();              
+            this.sprite.play();            
 
             // Posicionar el Sprite
             this.sprite.x = this.x;
@@ -38,22 +38,5 @@ class Cristal extends Entidad {
             console.error('Error cargando el SpriteSheet:', error);
         }
     }
-
-    // Método para eliminar el cristal del escenario
-    destruir() {
-        if (this.sprite) {
-            this.app.stage.removeChild(this.sprite);
-            this.sprite.destroy();
-            this.sprite = null;
-            this.listo = false;
-        }
-    }
-
-    update() {
-        if (!this.listo) return; 
-
-
-    }
+    
 }
-
-
