@@ -54,6 +54,7 @@ class Torre extends Entidad {
             this.app.stage.removeChild(this.torreContainer);
             this.sprite = null;
             this.listo = false;
+            
         }
     }
 
@@ -71,9 +72,7 @@ class Torre extends Entidad {
     update() {
         if (!this.listo) return; 
         this.actualizarPosicionEnGrid()
-        if(this.vida <= 0){
-            this.destruir()
-        }
+       
        
     }
 

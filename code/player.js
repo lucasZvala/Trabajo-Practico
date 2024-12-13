@@ -8,6 +8,9 @@ class Player {
         this.teclasPresionadas = {}
         this.grid = juego.grid;
 
+        this.maxAllies = 10; // Máximo número de aliados permitidos
+        this.minAlliesToResume = 5; // Mínimo número de aliados para reanudar incremento
+
         this.ancho = 70
         this.alto = 130
 
@@ -15,6 +18,8 @@ class Player {
         this.velocidadY = 0
 
         this.zIndex = 0; // Inicializar el zIndex
+
+        this.incrementoAllyInterval = null;
 
         this.id = "jugador01"
 
@@ -41,10 +46,10 @@ class Player {
         this.setupTeclado()
 
 
-        this.allyYCounter = 0
-        this.allyRCounter = 0
-        this.allyBCounter = 0
+        this.contadorAlly = 0
     }
+
+    
 
     crearContenedorPlayer() {
         // Crear un contenedor específico para el jugador
@@ -90,58 +95,13 @@ class Player {
         this.hitbox.visible = !this.hitbox.visible
     }
 
-    // detectarColisionesConObstaculos() {
-    //     for (let i = 0; i < this.juego.cristales.length; i++) {
-    //         let obs = this.juego.cristales[i]
-
-    //         // Verificar si hay superposición entre la hitbox del jugador y la del obstáculo
-    //         if (this.isOverlap(this.hitbox, obs.hitbox)) {
-    //           //  console.log("Colisión detectada con obstáculo", obs)
-
-    //             // Calcular el centro de ambas hitboxes
-    //             const centroJugadorX = this.hitbox.x + this.hitbox.width / 2
-    //             const centroJugadorY = this.hitbox.y + this.hitbox.height / 2
-    //             const centroObstaculoX = obs.hitbox.x + obs.hitbox.width / 2
-    //             const centroObstaculoY = obs.hitbox.y + obs.hitbox.height / 2
-
-    //             // Determinar la dirección de la colisión y establecer la velocidad a 0 en esa dirección
-    //             if (centroJugadorX < centroObstaculoX) {
-    //                 // Colisión desde la izquierda
-    //                 this.velocidadX = Math.min(this.velocidadX, 0)
-    //             } else if (centroJugadorX > centroObstaculoX) {
-    //                 // Colisión desde la derecha
-    //                 this.velocidadX = Math.max(this.velocidadX, 0)
-    //             }
-
-    //             if (centroJugadorY < centroObstaculoY) {
-    //                 // Colisión desde arriba
-    //                 this.velocidadY = Math.min(this.velocidadY, 0)
-    //             } else if (centroJugadorY > centroObstaculoY) {
-    //                 // Colisión desde abajo
-    //                 this.velocidadY = Math.max(this.velocidadY, 0)
-    //             }
-    //         }
-    //     }
-    // }
-
-    counterY() {
-        this.allyYCounter += 1
-    }
-
-    counterB() {
-        this.allyBCounter += 1
-    }
-
-    counterR() {
-        this.allyRCounter += 1
-    }
-
     isOverlap(hitbox1, hitbox2) {
         return hitbox1.x < hitbox2.x + hitbox2.width &&
             hitbox1.x + hitbox1.width > hitbox2.x &&
             hitbox1.y < hitbox2.y + hitbox2.height &&
             hitbox1.y + hitbox1.height > hitbox2.y
     }
+
 
     limitarAVelocidaMaxima() {
         // console.log("llimitar vel")
@@ -196,45 +156,30 @@ class Player {
 
         window.addEventListener('keydown', (event) => {
             if (event.key == 'k' || event.key == 'K') {
-                if (this.allyYCounter > 0) {
+                if (this.contadorAlly > 0) {
                     this.invocarAllyY();
-                    this.allyYCounter -= 1;
+                    this.contadorAlly -= 1;
                 } else {
                     console.log("no tienes este aliado")
                 }
             }
             if (event.key == 'j' || event.key == 'J') {
-                if (this.allyBCounter > 0) {
+                if (this.contadorAlly > 0) {
                     this.invocarAllyB();
-                    this.allyBCounter -= 1;
+                    this.contadorAlly -= 1;
                 } else {
                     console.log("no tienes este aliado")
                 }
             }
             if (event.key == 'l' || event.key == 'L') {
-                if (this.allyRCounter > 0) {
+                if (this.contadorAlly > 0) {
                     this.invocarAllyR();
-                    this.allyRCounter -= 1;
+                    this.contadorAlly -= 1;
                 } else {
                     console.log("no tienes este aliado")
                 }
             }
-            if (event.key == 'u' || event.key == 'U') {
-                this.counterY()
-                console.log("contador aliado amarillo agregado")
-
-            }
-            if (event.key == 'i' || event.key == 'I') {
-                this.counterB()
-                console.log("contador aliado Azul agregado")
-
-            }
-            if (event.key == 'o' || event.key == 'O') {
-
-                this.counterR();
-                console.log("contador aliado Rojo agregado")
-
-            }
+           
         });
     }
 
@@ -242,23 +187,20 @@ class Player {
     invocarAllyY() {
         const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyY.json', "Yellow");
         nuevoAlly.vivo = true
+        this.juego.contenedorPrincipal.addChild(nuevoAlly.allyContainer)
         this.juego.entidades.push(nuevoAlly);
         nuevoAlly.setObjetivo(this.juego.enemigosP[0])
-        // nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano("orange"))
-        this.allyYCounter -= 1
-        console.log('Ally invocado en la posición del Player:', this.x, this.y);
-        this.juego.allyY += 1
-        // nuevoAlly.moverHaciaObjetivo()
+        if(nuevoAlly.vida <=0){
+            nuevoAlly.borrar()
+        }
     }
 
     invocarAllyR() {
         const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyR.json', "Red");
         nuevoAlly.vivo = true
+        this.juego.contenedorPrincipal.addChild(nuevoAlly.allyContainer)
         this.juego.entidades.push(nuevoAlly);
         nuevoAlly.setObjetivo(this.juego.enemigosG[0])
-        this.allyYCounter -= 1
-        console.log('Ally invocado en la posición del Player:', this.x, this.y);
-        this.juego.allyR += 1
         if(nuevoAlly.vida <=0){
             nuevoAlly.borrar()
         }
@@ -268,12 +210,12 @@ class Player {
     invocarAllyB() {
         const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyB.json', );
         nuevoAlly.vivo = true
+        this.juego.contenedorPrincipal.addChild(nuevoAlly.allyContainer)
         this.juego.entidades.push(nuevoAlly);
         nuevoAlly.setObjetivo(this.juego.enemigosO[0])
-        this.allyYCounter -= 1
-        console.log('Ally invocado en la posición del Player:', this.x, this.y);
-        this.juego.allyB += 1
-        
+        if(nuevoAlly.vida <=0){
+            nuevoAlly.borrar()
+        }
         // nuevoAlly.moverHaciaObjetivo()
     }
 
@@ -296,6 +238,8 @@ class Player {
         if (!this.listo) return
         this.mover()
         this.time = time
+
+     
 
         this.velocidadX += this.aceleracionX
         this.velocidadY += this.aceleracionY
@@ -368,6 +312,49 @@ class Player {
         this.velocidadX = 0
         this.velocidadY = 0
     }
+
+
+    incrementarAlly() {
+        if (this.contadorAlly < this.maxAllies) {
+          this.contadorAlly++;
+          console.log(`Aliado creado. Total de aliados: ${this.contadorAlly}`);
+        } else {
+          console.log("Límite máximo de aliados alcanzado. Esperando para reanudar...");
+        }
+       }
+    
+      // Función para iniciar el incremento periódico del contador
+      iniciarIncrementoAlly(tiempo) {
+        if (this.incrementoInterval) {
+          console.warn("El incremento ya está activo.");
+          return;
+        }
+    
+        this.incrementoInterval = setInterval(() => {
+          if (this.contadorAlly < this.maxAllies) {
+            this.incrementarAlly();
+          } else if (this.contadorAlly <= this.minAlliesToResume) {
+            console.log("Número de aliados por debajo del umbral. Reanudando creación...");
+            this.incrementarAlly();
+          }
+        }, tiempo);
+    
+        console.log("Incremento de aliados iniciado.");
+      }
+        
+      // Función para detener el incremento periódico del contador
+      detenerIncrementoAlly() {
+        if (this.incrementoAllyInterval) {
+          clearInterval(this.incrementoAllyInterval);
+          this.incrementoAllyInterval = null;
+          console.log("Incremento periódico de aliados detenido.");
+        } else {
+          console.warn("No hay incremento de aliados en curso para detener.");
+        }
+      }
+
+
+
 }
 
 

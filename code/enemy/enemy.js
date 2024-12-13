@@ -18,7 +18,7 @@ class Enemy extends Entidad {
 
         this.sprite = null;
 
-        this.velMax = 3
+        this.velMax = 1
 
         this.aceleracionX = 0
         this.aceleracionY = 0
