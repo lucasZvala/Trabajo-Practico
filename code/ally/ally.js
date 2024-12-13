@@ -1,10 +1,11 @@
 class Ally extends Entidad {
     constructor(x, y, juego, texture = "../../frames/Ally/AllyY.json", objetivo = null) {
-        super(x, y, juego); 
-        this.juego = juego; 
-        this.listo = false; 
-      
+        super(x, y, juego);
+        this.juego = juego;
+        this.listo = false;
+        this.vivo = false
 
+        this.tipo = "basico"
 
         this.velocidadX = 0
         this.velocidadY = 0
@@ -13,14 +14,24 @@ class Ally extends Entidad {
 
         this.sprite = null;
 
+        this.crearContenedorAlly()
+
 
         this.aceleracionX = 0
         this.aceleracionY = 0
 
         this.vida = 15
+        this.damage = 5
 
         // Cargar el SpriteSheet
         this.cargarSpriteSheet(texture);
+    }
+
+    crearContenedorAlly() {
+        // Crear un contenedor específico para el jugador
+        this.allyContainer = new PIXI.Container();
+        this.allyContainer.name = "ally"
+        this.juego.app.stage.addChild(this.allyContainer);
     }
 
     async cargarSpriteSheet(texture) {
@@ -28,17 +39,17 @@ class Ally extends Entidad {
             // Cargar el archivo JSON del SpriteSheet
             const json = await PIXI.Assets.load(texture);
 
-            
+
             this.sprite = new PIXI.AnimatedSprite(json.animations['corriendo']);
 
-             this.sprite.name = "aliado"
+            this.sprite.name = "aliado"
 
-           
+
 
             // Configurar propiedades del Sprite
-            this.sprite.animationSpeed = 0.2; 
-            this.sprite.loop = true;         
-            this.sprite.play();              
+            this.sprite.animationSpeed = 0.2;
+            this.sprite.loop = true;
+            this.sprite.play();
 
             // Posicionar el Sprite
             this.sprite.x = this.x;
@@ -46,7 +57,7 @@ class Ally extends Entidad {
             this.sprite.anchor.set(0.5, 1);   // Ajustar el punto de anclaje
 
             // Agregar el Sprite al stage
-            this.juego.app.stage.addChild(this.sprite);
+            this.allyContainer.addChild(this.sprite);
 
             this.listo = true; // Indicar que el enemigo está listo
         } catch (error) {
@@ -74,7 +85,7 @@ class Ally extends Entidad {
 
 
     moverHaciaObjetivo() {
-      
+
         if (!this.listo || !this.objetivo) return;
 
         // Determinar el objetivo actual
@@ -111,37 +122,50 @@ class Ally extends Entidad {
                 this.sprite.scale.x = -1; // Mirar a la izquierda
             }
         } else {
-            // Si llegó al objetivo, detenerse o ejecutar alguna acción
-            console.log("Llegó al objetivo");
+            if (objetivo.vida > 0) {
+                this.atacarObjetivo(objetivo)
+                console.log("te ataco")
+            }
+        }
+    }
+    atacarObjetivo(){
+        this.objetivo.vida -= this.damage
+        this.vida = 0
+    }
+
+    destruir() {
+        if (this.sprite) {
+            this.juego.app.stage.removeChild(this.allyContainer);
+            this.sprite = null;
+            this.listo = false;
         }
     }
 
-
-    buscarEnemigoCercano(tipo){
-       if (this.entidades.filter(entidad => entidad.tipo == tipo)){
-        this.moverHaciaObjetivo()
-       }
-        
+    setTipo(tipoAliado){
+       this.tipo = tipoAliado
     }
+
+    
 
 
     update() {
         if (!this.listo) return; // Salir si el SpriteSheet no está listo
-       
-        if (this.objetivo) {
-            if (this.haLlegadoAlObjetivo()) {
-                console.log('Ally ha llegado al objetivo:', this.objetivo);
-                // Aquí puedes definir lo que sucede al llegar al objetivo
-                this.objetivo = null; // Opcional: limpiar el objetivo al llegar
-            } else {
-                this.moverHaciaObjetivo();
-            }
-        }
+        this.moverHaciaObjetivo();
+        this.actualizarPosicionEnGrid()
 
+        if(this.vida <= 0){
+            this.vivo = false
+        }
+        if(!this.vivo){
+            this.destruir()
+        }
+            
         
+
+
         // Aquí puedes agregar lógica específica, como perseguir al jugador
-        this.sprite.x = this.x; // Actualizar la posición en cada frame
-        this.sprite.y = this.y;
+        // this.sprite.x = this.x; // Actualizar la posición en cada frame
+        // this.sprite.y = this.y;
 
         super.update(); // Llamar al método update de la clase base
     }

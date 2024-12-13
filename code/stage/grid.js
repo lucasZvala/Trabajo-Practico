@@ -25,6 +25,7 @@ class Grid {
     }
   
     getCell(x, y) {
+      
       // Asegurarse de que los índices estén dentro de los límites de la matriz
       let newx = Math.max(0, Math.min(this.numColumns - 1, x));
       let newy = Math.max(0, Math.min(this.numRows - 1, y));
@@ -33,17 +34,18 @@ class Grid {
     }
   
     add(objeto) {
-      const xIndex = Math.floor(objeto.container.x / this.cellSize);
-      const yIndex = Math.floor(objeto.container.y / this.cellSize);
+      const xIndex = Math.floor(objeto.x / this.cellSize);
+      const yIndex = Math.floor(objeto.y / this.cellSize);
   
-      const cell = this.getCellPX(xIndex, yIndex);
+      const cell = this.getCell(xIndex, yIndex);
       if (!cell) return; //console.warn("Cell not found",xIndex,yIndex);
-      cell.agregar(objeto);
+      cell.agregar(objeto.quienSoy);
+      objeto.quienSoy.miCeldaActual = cell;
     }
   
     remove(objeto) {
-      if (objeto.miCeldaActual) {
-        objeto.miCeldaActual.sacar(objeto);
+      if (objeto.quienSoy.miCeldaActual) {
+        objeto.quienSoy.miCeldaActual.sacar(objeto.quienSoy);
       }
     }
   

@@ -2,9 +2,13 @@ class Enemy extends Entidad {
     constructor(x, y, juego, texture = "../../frames/enemy/EnemyP.json", tipo = "basico") {
         super(x, y, juego); 
         this.juego = juego; 
-        this.listo = false; 
+        this.listo = false;
+        this.vivo = false
+        
+        this.quienSoy = this
       
         this.tipo = tipo
+        this.crearContenedorEnemy();
 
         this.grid = juego.grid; // Referencia a la grid
         this.vision = 120 + Math.floor(Math.random() * 150); //en pixels
@@ -18,11 +22,20 @@ class Enemy extends Entidad {
 
         this.aceleracionX = 0
         this.aceleracionY = 0
+
+        this.damage = 1
         
         this.vida = 5
 
         // Cargar el SpriteSheet
         this.cargarSpriteSheet(texture);
+    }
+
+    crearContenedorEnemy() {
+        // Crear un contenedor específico para el enemigo
+        this.enemyContainer = new PIXI.Container();
+        this.enemyContainer.name = "enemy"
+        this.juego.app.stage.addChild(this.enemyContainer);
     }
 
     async cargarSpriteSheet(texture) {
@@ -46,7 +59,7 @@ class Enemy extends Entidad {
             this.sprite.anchor.set(0.5, 1);   // Ajustar el punto de anclaje
 
             // Agregar el Sprite al stage
-            this.juego.app.stage.addChild(this.sprite);
+            this.enemyContainer.addChild(this.sprite);
 
             this.listo = true; // Indicar que el enemigo está listo
         } catch (error) {
@@ -59,15 +72,17 @@ class Enemy extends Entidad {
        
         // Define el objetivo hacia el que se moverá el enemigo
         this.puntoB = puntoB;
+        this.moverHaciaObjetivo()
+        
     }
 
     moverHaciaObjetivo() {
-       debugger
-        if (!this.listo || this.puntoB) return;
-        
+         
+        if (!this.listo || !this.puntoB) return;
+       
         // Determinar el objetivo actual
         const objetivo = this.puntoB;
-
+        
         // Verificar si el objetivo es un objeto con coordenadas
         const objetivoX = objetivo.x || objetivo.sprite?.x || 0;
         const objetivoY = objetivo.y || objetivo.sprite?.y || 0;
@@ -108,23 +123,40 @@ class Enemy extends Entidad {
     }
 
     atacarObjetivo(){
-        console.log("te ataco")
+        this.puntoB.vida -= this.damage
+    }
+
+    destruir() {
+        if (this.sprite) {
+            this.juego.app.stage.removeChild(this.enemyContainer);
+            this.sprite = null;
+            this.listo = false;
+        }
     }
 
 
     update() {
         if (!this.listo) return; // Salir si el SpriteSheet no está listo
-
-
+        super.update();
+        // console.log("1")
         this.mirarAlrededor()
+        this.actualizarPosicionEnGrid()
 
         this.moverHaciaObjetivo();
 
+        if(this.vida <= 0){
+            this.vivo = false
+        }
+        if(!this.vivo){
+            this.destruir()
+        }
+            
+
         
         // Aquí puedes agregar lógica específica, como perseguir al jugador
-        this.sprite.x = this.x; // Actualizar la posición en cada frame
-        this.sprite.y = this.y;
+        // this.sprite.x = this.x; // Actualizar la posición en cada frame
+        // this.sprite.y = this.y;
 
-        super.update(); // Llamar al método update de la clase base
+         // Llamar al método update de la clase base
     }
 }

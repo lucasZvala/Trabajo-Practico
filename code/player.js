@@ -16,9 +16,9 @@ class Player {
 
         this.zIndex = 0; // Inicializar el zIndex
 
-        
+        this.id = "jugador01"
 
-        
+
 
         this.aceleracionX = 0
         this.aceleracionY = 0
@@ -27,6 +27,8 @@ class Player {
         this.velMax = 2
 
         this.listo = false
+
+        this.crearContenedorPlayer();
 
         this.quieto()
 
@@ -37,11 +39,18 @@ class Player {
         this.crearHitbox()
 
         this.setupTeclado()
-        
 
-        this.allyYCounter= 0
-        this.allyRCounter= 0
-        this.allyBCounter= 0
+
+        this.allyYCounter = 0
+        this.allyRCounter = 0
+        this.allyBCounter = 0
+    }
+
+    crearContenedorPlayer() {
+        // Crear un contenedor específico para el jugador
+        this.playerContainer = new PIXI.Container();
+        this.playerContainer.name = "player"
+        this.app.stage.addChild(this.playerContainer);
     }
 
     async cargarSpriteSheet() {
@@ -51,10 +60,11 @@ class Player {
         this.sprite.animationSpeed = 0.2
         this.sprite.loop = true
         this.sprite.play()
-        this.app.stage.addChild(this.sprite)
+        this.playerContainer.addChild(this.sprite);
         this.sprite.anchor.set(0.5, 1)
         this.listo = true
-        
+        this.sprite.quienSoy = this
+
     }
 
     updateZIndex() {
@@ -63,8 +73,8 @@ class Player {
 
     crearHitbox() {
         this.hitbox = new PIXI.Graphics()
-            .lineStyle(2, 0xff0000)  
-            .beginFill(0x00ff00, 0.00000001) 
+            .lineStyle(2, 0xff0000)
+            .beginFill(0x00ff00, 0.00000001)
             .drawRect(0, 0, this.ancho, this.alto)
             .endFill()
 
@@ -83,17 +93,17 @@ class Player {
     // detectarColisionesConObstaculos() {
     //     for (let i = 0; i < this.juego.cristales.length; i++) {
     //         let obs = this.juego.cristales[i]
-    
+
     //         // Verificar si hay superposición entre la hitbox del jugador y la del obstáculo
     //         if (this.isOverlap(this.hitbox, obs.hitbox)) {
     //           //  console.log("Colisión detectada con obstáculo", obs)
-    
+
     //             // Calcular el centro de ambas hitboxes
     //             const centroJugadorX = this.hitbox.x + this.hitbox.width / 2
     //             const centroJugadorY = this.hitbox.y + this.hitbox.height / 2
     //             const centroObstaculoX = obs.hitbox.x + obs.hitbox.width / 2
     //             const centroObstaculoY = obs.hitbox.y + obs.hitbox.height / 2
-    
+
     //             // Determinar la dirección de la colisión y establecer la velocidad a 0 en esa dirección
     //             if (centroJugadorX < centroObstaculoX) {
     //                 // Colisión desde la izquierda
@@ -102,7 +112,7 @@ class Player {
     //                 // Colisión desde la derecha
     //                 this.velocidadX = Math.max(this.velocidadX, 0)
     //             }
-    
+
     //             if (centroJugadorY < centroObstaculoY) {
     //                 // Colisión desde arriba
     //                 this.velocidadY = Math.min(this.velocidadY, 0)
@@ -113,24 +123,24 @@ class Player {
     //         }
     //     }
     // }
-    
-    counterY(){
-        this.allyYCounter +=1
+
+    counterY() {
+        this.allyYCounter += 1
     }
 
-    counterB(){
-        this.allyBCounter +=1
+    counterB() {
+        this.allyBCounter += 1
     }
 
-    counterR(){
-        this.allyRCounter +=1
+    counterR() {
+        this.allyRCounter += 1
     }
 
     isOverlap(hitbox1, hitbox2) {
         return hitbox1.x < hitbox2.x + hitbox2.width &&
-               hitbox1.x + hitbox1.width > hitbox2.x &&
-               hitbox1.y < hitbox2.y + hitbox2.height &&
-               hitbox1.y + hitbox1.height > hitbox2.y
+            hitbox1.x + hitbox1.width > hitbox2.x &&
+            hitbox1.y < hitbox2.y + hitbox2.height &&
+            hitbox1.y + hitbox1.height > hitbox2.y
     }
 
     limitarAVelocidaMaxima() {
@@ -159,117 +169,127 @@ class Player {
     mover() {
         if (this.teclasPresionadas["w"]) {
             this.irArriba()
-          
+
             this.sprite.play()
-          }
-          if (this.teclasPresionadas["s"]) {
-            this.irAbajo()
-          
-            this.sprite.play()
-          }
-          if (this.teclasPresionadas["a"]) {
-            this.irIzquierda()
-    
-            this.sprite.play()
-            
-          }
-          if (this.teclasPresionadas["d"]) {
-            this.irDerecha()
-          
-            this.sprite.play()
-           
-          }
         }
+        if (this.teclasPresionadas["s"]) {
+            this.irAbajo()
+
+            this.sprite.play()
+        }
+        if (this.teclasPresionadas["a"]) {
+            this.irIzquierda()
+
+            this.sprite.play()
+
+        }
+        if (this.teclasPresionadas["d"]) {
+            this.irDerecha()
+
+            this.sprite.play()
+
+        }
+    }
 
     setupTeclado() {
 
-        
+
         window.addEventListener('keydown', (event) => {
             if (event.key == 'k' || event.key == 'K') {
-                if(this.allyYCounter > 0){
-                this.invocarAllyY();
-                this.allyYCounter -= 1;
-            }else{
-                console.log("no tienes este aliado")
-            }
+                if (this.allyYCounter > 0) {
+                    this.invocarAllyY();
+                    this.allyYCounter -= 1;
+                } else {
+                    console.log("no tienes este aliado")
+                }
             }
             if (event.key == 'j' || event.key == 'J') {
-                if(this.allyBCounter > 0){
-                this.invocarAllyB();
-                this.allyBCounter -= 1;
-            }else{
-                console.log("no tienes este aliado")
-            }
+                if (this.allyBCounter > 0) {
+                    this.invocarAllyB();
+                    this.allyBCounter -= 1;
+                } else {
+                    console.log("no tienes este aliado")
+                }
             }
             if (event.key == 'l' || event.key == 'L') {
-                if(this.allyRCounter > 0){
-                this.invocarAllyR();
-                this.allyRCounter -= 1;
-            }else{
-                console.log("no tienes este aliado")
-            }
+                if (this.allyRCounter > 0) {
+                    this.invocarAllyR();
+                    this.allyRCounter -= 1;
+                } else {
+                    console.log("no tienes este aliado")
+                }
             }
             if (event.key == 'u' || event.key == 'U') {
-               this.counterY()
+                this.counterY()
                 console.log("contador aliado amarillo agregado")
-            
+
             }
             if (event.key == 'i' || event.key == 'I') {
-               this.counterB()
-               console.log("contador aliado Azul agregado")
-           
+                this.counterB()
+                console.log("contador aliado Azul agregado")
+
             }
             if (event.key == 'o' || event.key == 'O') {
-                
+
                 this.counterR();
                 console.log("contador aliado Rojo agregado")
-           
+
             }
         });
     }
 
     // Lógica para invocar un Ally
     invocarAllyY() {
-        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyY.json');
+        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyY.json', "Yellow");
+        nuevoAlly.vivo = true
         this.juego.entidades.push(nuevoAlly);
+        nuevoAlly.setObjetivo(this.juego.enemigosP[0])
         // nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano("orange"))
-        this.allyYCounter -=1
+        this.allyYCounter -= 1
         console.log('Ally invocado en la posición del Player:', this.x, this.y);
         this.juego.allyY += 1
         // nuevoAlly.moverHaciaObjetivo()
     }
 
     invocarAllyR() {
-        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyR.json');
+        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyR.json', "Red");
+        nuevoAlly.vivo = true
         this.juego.entidades.push(nuevoAlly);
-        // nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano("orange"))
-        this.allyYCounter -=1
+        nuevoAlly.setObjetivo(this.juego.enemigosG[0])
+        this.allyYCounter -= 1
         console.log('Ally invocado en la posición del Player:', this.x, this.y);
         this.juego.allyR += 1
+        if(nuevoAlly.vida <=0){
+            nuevoAlly.borrar()
+        }
         // nuevoAlly.moverHaciaObjetivo()
     }
 
     invocarAllyB() {
-        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyB.json');
+        const nuevoAlly = new Ally(this.x, this.y, this.juego, '../../frames/Ally/AllyB.json', );
+        nuevoAlly.vivo = true
         this.juego.entidades.push(nuevoAlly);
-        // nuevoAlly.setObjetivo(nuevoAlly.buscarEnemigoCercano("orange"))
-        this.allyYCounter -=1
+        nuevoAlly.setObjetivo(this.juego.enemigosO[0])
+        this.allyYCounter -= 1
         console.log('Ally invocado en la posición del Player:', this.x, this.y);
         this.juego.allyB += 1
+        
         // nuevoAlly.moverHaciaObjetivo()
     }
 
     pulsandoTeclas() {
         // Evento al presionar una tecla
         window.addEventListener('keydown', (e) => {
-          this.teclasPresionadas[e.key.toLowerCase()] = true  // Marca la tecla como presionada
+            this.teclasPresionadas[e.key.toLowerCase()] = true  // Marca la tecla como presionada
         })
-    
+
         // Evento al soltar una tecla
         window.addEventListener('keyup', (e) => {
-          this.teclasPresionadas[e.key.toLowerCase()] = false  // Marca la tecla como no presionada
+            this.teclasPresionadas[e.key.toLowerCase()] = false  // Marca la tecla como no presionada
         })
-      }
+    }
+
+
 
 
     update(time) {
@@ -290,6 +310,7 @@ class Player {
         this.velocidadY *= 0.7
 
         this.updateZIndex();
+        this.actualizarPosicionEnGrid();
 
         // this.detectarColisionesConObstaculos()
         this.limitarAVelocidaMaxima()
@@ -301,7 +322,16 @@ class Player {
         this.hitbox.x = this.x - this.ancho / 2
         this.hitbox.y = this.y - this.alto - 30
     }
-    
+
+    actualizarPosicionEnGrid() {
+        this.grid.update(this.sprite);
+    }
+
+    mirarAlrededor() {
+        this.vecinos = this.obtenerVecinos();
+        this.celdasVecinas = this.miCeldaActual.obtenerCeldasVecinas();
+        console.log(this.vecinos)
+      }
 
     aplicarAceleracion(x, y) {
         this.aceleracionX = x
@@ -343,4 +373,3 @@ class Player {
 
 
 
-    

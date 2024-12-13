@@ -3,12 +3,21 @@ class Cristal extends Entidad {
         super(x, y, juego); 
         this.juego = juego; 
         this.listo = false; 
+
+        this.crearContenedorCristal();
       
         this.sprite = null;
 
 
         // Cargar el SpriteSheet
         this.cargarSpriteSheet(texture);
+    }
+
+    crearContenedorCristal() {
+        // Crear un contenedor específico para el cristal
+        this.cristalContainer = new PIXI.Container();
+        this.cristalContainer.name = "cristal"
+        this.juego.app.stage.addChild(this.cristalContainer);
     }
 
     async cargarSpriteSheet(texture) {
@@ -29,9 +38,9 @@ class Cristal extends Entidad {
             this.sprite.x = this.x;
             this.sprite.y = this.y;
             this.sprite.anchor.set(0.5, 1);   // Ajustar el punto de anclaje
-
+            this.sprite.quienSoy = this
             // Agregar el Sprite al stage
-            this.juego.app.stage.addChild(this.sprite);
+            this.cristalContainer.addChild(this.sprite);
 
             this.listo = true; // Indicar que el enemigo está listo
         } catch (error) {
@@ -51,8 +60,12 @@ class Cristal extends Entidad {
 
     update() {
         if (!this.listo) return; 
+       this.actualizarPosicionEnGrid()
 
+    }
 
+    actualizarPosicionEnGrid() {
+        this.grid.update(this.sprite);
     }
 }
 

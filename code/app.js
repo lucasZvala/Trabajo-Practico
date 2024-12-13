@@ -5,10 +5,12 @@ class Juego {
     this.cristales = []
     this.contadorDeFrames = 0
     this.entidades = []
-    this.enemigos = []
+    this.enemigosO = []
+    this.enemigosG = []
+    this.enemigosP = []
     this.torres = []
-    this.alto = 720 *3
-    this.ancho = 1280 *3
+    this.alto = 720 
+    this.ancho = 1280 
     this.juegoActivo = false;
 
     this.enemies = 0
@@ -18,6 +20,8 @@ class Juego {
 
     this.grid = new Grid(50, this); // Tamaño de celda 50
     this.gridActualizacionIntervalo = 10; // Cada 10 frames
+
+    
 
     this.segundos = 0
     this.minutos = 0
@@ -91,7 +95,7 @@ inicializarPlayer() {
 inicializarSpawnerEnemigo(){
   this.inicializarSpawnerEnemigoO()
   this.inicializarSpawnerEnemigoG()
-  // this.inicializarSpawnerEnemigoP()
+  this.inicializarSpawnerEnemigoP()
 }
 
 
@@ -104,12 +108,12 @@ crearPausa(){
 
 inicializarSpawnerEnemigoO() {
   // Crear un spawner para enemigos
-  const spawnerEnemy = new Spawner(this, 2200, { x: 1280, y: 720 }, 1, () => {
-      const enemy = new Enemy(200, 200, this, "../../frames/enemy/EnemyO.json", "orange");
-      
-      enemy.setObjetivo({ x: 1200, y: 600 });
-      this.enemigos.push(enemy);
-  }, 2);
+  const spawnerEnemy = new Spawner(this, 2000, { x: 1280, y: 720 }, 1, () => {
+      const enemy = new Enemy(200, 200, this, "../../frames/enemy/EnemyO.json");
+      enemy.vivo =true
+      enemy.setObjetivo(this.torres[0]);
+      this.enemigosO.push(enemy);
+  }, 5, "orange");
 
   this.enemies += 1
   spawnerEnemy.iniciar();
@@ -117,11 +121,12 @@ inicializarSpawnerEnemigoO() {
 
 inicializarSpawnerEnemigoP() {
   // Crear un spawner para enemigos
-  const spawnerEnemy = new Spawner(this, 3000, { x: 1280, y: 720 }, 1, () => {
+  const spawnerEnemy = new Spawner(this, 1000, { x: 1280, y: 720 }, 1, () => {
       const enemy = new Enemy(200, 200, this, "../../frames/enemy/EnemyP.json");
-      enemy.setObjetivo({ x: 1200, y: 600 });
-      this.enemigos.push(enemy);
-  }, 2, "purple");
+      enemy.vivo =true
+      enemy.setObjetivo(this.torres[2]);
+      this.enemigosP.push(enemy);
+  }, 5, "purple");
 
   this.enemies += 1
   spawnerEnemy.iniciar();
@@ -130,14 +135,24 @@ inicializarSpawnerEnemigoP() {
 
 inicializarSpawnerEnemigoG() {
   // Crear un spawner para enemigos
-  const spawnerEnemy = new Spawner(this, 2200, { x: 1280, y: 720 }, 1, () => {
+  const spawnerEnemy = new Spawner(this, 3000, { x: 1280, y: 720 }, 1, () => {
       const enemy = new Enemy(200, 200, this, "../../frames/enemy/EnemyG.json", "green");
-      enemy.setObjetivo({ x: 1200, y: 5 });
-      this.enemigos.push(enemy);
-  }, 2, "green");
+      enemy.vivo =true
+      enemy.setObjetivo(this.torres[1]);
+      this.enemigosG.push(enemy);
+  }, 5, "green");
 
   this.enemies += 1
   spawnerEnemy.iniciar();
+}
+
+ chequearYEliminar(lista, condicion) {
+  for (let i = lista.length - 1; i >= 0; i--) {
+      if (condicion(lista[i])) {
+          console.log(`Eliminando elemento con ID: ${lista[i].id}`);
+          lista.splice(i, 1); // Elimina el elemento en la posición i
+      }
+  }
 }
 
 
@@ -162,8 +177,7 @@ inicializarSpawnerEnemigoG() {
 crearCristalB() {
   // Crea algunos cristales en ubicaciones predefinidas
  
-      const base = new Cristal(200, 300, this, "../../frames/cristales/cristalB.json");
-      console.log("cristalB creado")
+      const base = new Cristal(100, 300, this, "../../frames/cristales/cristalB.json");
       this.cristales.push(base); // Añade el cristal a la lista
  
 }
@@ -171,8 +185,7 @@ crearCristalB() {
 crearCristalY() {
   // Crea algunos cristales en ubicaciones predefinidas
  
-      const base = new Cristal(800, 300, this, "../../frames/cristales/cristalY.json");
-      console.log("cristalY creado")
+      const base = new Cristal(150, 300, this, "../../frames/cristales/cristalY.json");
       this.cristales.push(base); // Añade el cristal a la lista
  
 }
@@ -180,8 +193,8 @@ crearCristalY() {
 crearCristalR() {
   // Crea algunos cristales en ubicaciones predefinidas
  
-      const base = new Cristal(1200, 300, this, "../../frames/cristales/cristalR.json");
-      console.log("cristalR creado")
+      const base = new Cristal(200, 300, this, "../../frames/cristales/cristalR.json");
+
       this.cristales.push(base); // Añade el cristal a la lista
  
 }
@@ -195,27 +208,25 @@ crearCristal(){
 crearTorreB() {
   // Crea algunos cristales en ubicaciones predefinidas
  
-      const base = new Torre(200, 500, this, "../../frames/torres/torreB.json");
-      console.log("cristalB creado")
-      this.torres.push(base); // Añade el cristal a la lista
+      const torreB = new Torre(200, 450, this, "../../frames/torres/torreB.json");
+      this.torres.push(torreB); // Añade el cristal a la lista
  
 }
 
 crearTorreY() {
   // Crea algunos cristales en ubicaciones predefinidas
  
-      const base = new Torre(800, 500, this, "../../frames/torres/torreY.json");
-      console.log("cristalY creado")
-      this.torres.push(base); // Añade el cristal a la lista
+      const torreY = new Torre(600, 450, this, "../../frames/torres/torreY.json");
+     
+      this.torres.push(torreY); // Añade el cristal a la lista
  
 }
 
 crearTorreR() {
   // Crea algunos cristales en ubicaciones predefinidas
  
-      const base = new Torre(1200, 500, this, "../../frames/torres/torreR.json");
-      console.log("cristalR creado")
-      this.torres.push(base); // Añade el cristal a la lista
+      const torreR = new Torre(1000, 450, this, "../../frames/torres/torreR.json");
+      this.torres.push(torreR); // Añade el cristal a la lista
  
 }
 
@@ -234,15 +245,48 @@ crearTorres(){
      this.contadorDeFrames++
     // this.cronometro()
 
-    
+    // this.moverCamara()
     // this.hudCounter()
 
      if (this.player) {
       this.player.update();
   }
+
+  this.chequearYEliminar(this.enemigosP,(enemigos) => enemigos.vida <=0 )
+  this.chequearYEliminar(this.enemigosO,(enemigos) => enemigos.vida <=0 )
+  this.chequearYEliminar(this.enemigosG,(enemigos) => enemigos.vida <=0 )
+  this.chequearYEliminar(this.entidades,(entidad) => entidad.vida <=0 )
+  this.chequearYEliminar(this.torres,(torre) => torre.vida <=0 )
+
+
     for(let entidad of this.entidades){
       entidad.update()
       entidad.render()
+    }
+
+    for(let enemyP of this.enemigosP){
+      enemyP.update()
+      enemyP.render()
+    }
+
+    for(let enemyG of this.enemigosG){
+      enemyG.update()
+      enemyG.render()
+    }
+
+    for(let enemyO of this.enemigosO){
+      enemyO.update()
+      enemyO.render()
+    }
+
+    for(let torre of this.torres){
+      torre.update()
+      torre.render()
+    }
+
+    for(let cristal of this.cristales){
+      cristal.update()
+      cristal.render()
     }
     
   }
@@ -272,8 +316,8 @@ crearTorres(){
   moverCamara() {
     let lerpFactor = 0.05;
     // Obtener la posición del protagonista
-    const playerX = this.player.container.x;
-    const playerY = this.player.container.y;
+    const playerX = this.player.playerContainer.x;
+    const playerY = this.player.playerContainer.y;
 
     // Calcular la posición objetivo del stage para centrar al protagonista
     const halfScreenWidth = this.app.screen.width / 2;
